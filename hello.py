@@ -14,14 +14,15 @@ soup = BeautifulSoup(data.text, 'html.parser')
 movies = soup.select('#old_content > table > tbody > tr')
 
 for movie in movies:
+    a = movie.select_one('td.title > div > a')
 
-
-        title = movie.text
+    if a is not None:
+        title = a.text
         rank = movie.select_one(' td:nth-child(1) > img')['alt']
         star = movie.select_one('td.point').text
-        doc = {'title':title,
-               'rank':rank,
-               'star':star
-               }
-
-print(doc)
+        doc = {
+            'title':title,
+            'rank':rank,
+            'star':star
+        }
+        db.movies.insert_one(doc)
